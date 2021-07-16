@@ -1,21 +1,40 @@
 #include <iostream>
 #include <ctime>
+#include <fstream>
 #include <vector>
 using namespace std;
+
+void lottery(vector<string> info, int winner_number = 10)
+{
+    string winner[winner_number]={0};
+    for (int i = 0; i < winner_number; i++)
+    {
+        int j = rand() % info.size();
+        winner[i] = info[j];
+        info.erase(info.begin() + j);
+    }
+    for (int i = 0; i < winner_number; i++)
+    {
+        cout << winner[i] << "\t";
+    }
+}
 
 int main()
 {
     srand(time(NULL));
-    string a[11];
-    vector<string> v1 = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"};
-    for (int i = 0; i < 10; i++)
-    {
-        int j = rand() % v1.size();
-        a[i] = v1[j];
-        v1.erase(v1.begin() + j);
+    ifstream ifs("lottery.txt", ios::in);
+    vector<string> info;
+    if (!ifs.is_open()) {
+        cout << "Failed to open file.\n";
+        ifs.close();
     }
-    for (int i = 0; i < 10; i++)
-    {
-        cout << a[i] << "\t";
+    else{
+        string s;
+        while (getline(ifs, s)) {
+            //cout << s << endl;
+            info.push_back(s);
+        }
+        lottery(info, 10);
+        ifs.close();
     }
 }
